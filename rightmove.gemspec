@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rightmove}
-  s.version = "0.1.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Robert May"]
-  s.date = %q{2011-01-26}
+  s.date = %q{2011-01-27}
   s.description = %q{This library is used to parse a Rightmove format zip file}
   s.email = %q{robotmay@gmail.com}
   s.extra_rdoc_files = [
@@ -18,18 +18,13 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".document",
-    ".rspec",
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",
     "README.textile",
     "Rakefile",
     "VERSION",
-    "lib/rightmove.rb",
-    "rightmove.gemspec",
-    "spec/rightmove/example.zip",
-    "spec/rightmove_spec.rb",
-    "spec/spec_helper.rb"
+    "lib/rightmove.rb"
   ]
   s.homepage = %q{http://github.com/robertmay/rightmove}
   s.licenses = ["MIT"]

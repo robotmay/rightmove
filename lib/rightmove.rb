@@ -3,6 +3,8 @@ require 'blm'
 
 module Rightmove
 	class Archive		
+		attr_accessor :document, :zip_file, :branch_id, :timestamp
+		
 		def initialize(file = nil, options = {})
 			open(file) unless file.nil?
 		end
@@ -11,29 +13,27 @@ module Rightmove
 			self.zip_file = file
 			read(arguments)
 		end
-	
-		def document
-			@document
-		end
-		
-		def zip_file
-			@zip_file
-		end
 		
 		def zip_file=(file)
-			puts "derp"
 			if file.instance_of?(Zip::ZipFile)
 				@zip_file = file
 			else
 				return false unless File.exists?(file)
 				@zip_file = Zip::ZipFile.open(file)
 			end
+			parse_file_name
 		end
 	
 		private
 		def read(arguments)
 			blm = self.zip_file.entries.select! {|v| v.to_s =~ /\.blm/i }.first
 			@document = BLM::Document.new( self.zip_file.read(blm) )
+		end
+		
+		def parse_file_name
+			branch_id, timestamp = @zip_file.to_s.split("_").pop(2)
+			@branch_id = branch_id.to_i
+			@timestamp = Time.new(timestamp)
 		end
 	end
 end
@@ -44,7 +44,7 @@ module BLM
 			unless @attributes[method].nil?
 				value = @attributes[method] 
 				if arguments[:instantiate_with]
-					return value unless value =~ /\.(jpg|png|gif)/i
+					return value unless value =~ /\.jpg/i
 					if arguments[:instantiate_with].instance_of?(Zip::ZipFile)
 						zip = arguments[:instantiate_with]
 					else
