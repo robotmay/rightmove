@@ -2,49 +2,64 @@ require 'zip/zipfilesystem'
 require 'blm'
 
 module Rightmove
-	class Archive
-		@@configuration = {
-			:tmp_dir => "/tmp/rightmove/"
-		}
-		
+	class Archive		
 		def initialize(file = nil, options = {})
 			open(file) unless file.nil?
-			@@configuration.update(options)
 		end
 	
-		def open(file, arguments)
-			return false unless File.exists?(file)
-			@file = file
+		def open(file, arguments = {})
+			self.zip_file = file
 			read(arguments)
 		end
 	
 		def document
 			@document
 		end
+		
+		def zip_file
+			@zip_file
+		end
+		
+		def zip_file=(file)
+			puts "derp"
+			if file.instance_of?(Zip::ZipFile)
+				@zip_file = file
+			else
+				return false unless File.exists?(file)
+				@zip_file = Zip::ZipFile.open(file)
+			end
+		end
 	
 		private
 		def read(arguments)
-			Zip::ZipFile.open(@file) do |zip|
-				@zip_file = zip
-				blm = @zip_file.entries.select! {|v| v.to_s =~ /\.blm/i }.first
-				@document = BLM::Document.new( zip.read(blm) )
-				instantiate_files if arguments[:instantiate_files]
-			end
-			@document
+			blm = self.zip_file.entries.select! {|v| v.to_s =~ /\.blm/i }.first
+			@document = BLM::Document.new( self.zip_file.read(blm) )
 		end
-		
-		def instantiate_files
-			@document.data.each_with_index do |row, index|
-				row.attributes.each do |key, value|
-					next unless value =~ /\.jpg/i
-					matching_files = @zip_file.entries.select! {|v| v.to_s =~ /#{value}/ }
+	end
+end
+
+module BLM	
+	class Row
+		def method_missing(method, arguments = {}, &block)
+			unless @attributes[method].nil?
+				value = @attributes[method] 
+				if arguments[:instantiate_with]
+					return value unless value =~ /\.(jpg|png|gif)/i
+					if arguments[:instantiate_with].instance_of?(Zip::ZipFile)
+						zip = arguments[:instantiate_with]
+					else
+						zip = Zip::ZipFile.open(arguments[:instantiate_with])
+					end
+					matching_files = zip.entries.select! {|v| v.to_s =~ /#{value}/ }
 					unless matching_files.empty?
-						file = StringIO.new( @zip_file.read(matching_files.first) )
+						file = StringIO.new( zip.read(matching_files.first) )
 						file.class.class_eval { attr_accessor :original_filename, :content_type }
 						file.original_filename = matching_files.first.to_s
 						file.content_type = "image/jpg"
-						@document.data[index].attributes[key] = file
+						return file
 					end
+				else
+					value
 				end
 			end
 		end

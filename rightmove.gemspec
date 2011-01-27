@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "lib/rightmove.rb",
+    "rightmove.gemspec",
     "spec/rightmove/example.zip",
     "spec/rightmove_spec.rb",
     "spec/spec_helper.rb"
