@@ -5,13 +5,13 @@ module Rightmove
 	class Archive		
 		attr_accessor :document, :zip_file, :branch_id, :timestamp
 		
-		def initialize(file = nil, options = {})
+		def initialize(file = nil)
 			open(file) unless file.nil?
 		end
 	
-		def open(file, arguments = {})
+		def open(file)
 			self.zip_file = file
-			read(arguments)
+			read
 		end
 		
 		def zip_file=(file)
@@ -25,7 +25,7 @@ module Rightmove
 		end
 	
 		private
-		def read(arguments)
+		def read
 			blm = self.zip_file.entries.select! {|v| v.to_s =~ /\.blm/i }.first
 			@document = BLM::Document.new( self.zip_file.read(blm) )
 		end
