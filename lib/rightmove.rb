@@ -50,7 +50,7 @@ module BLM
 					else
 						zip = Zip::ZipFile.open(arguments[:instantiate_with])
 					end
-					matching_files = zip.entries.select! {|v| v.to_s =~ /#{value}/ }
+					matching_files = zip.entries.select {|v| v.to_s =~ /#{value}/ }
 					unless matching_files.empty?
 						file = StringIO.new( zip.read(matching_files.first) )
 						file.class.class_eval { attr_accessor :original_filename, :content_type }
