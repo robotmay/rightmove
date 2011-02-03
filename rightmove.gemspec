@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rightmove}
-  s.version = "0.2.3"
+  s.version = "0.2.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Robert May"]
-  s.date = %q{2011-01-27}
+  s.date = %q{2011-02-03}
   s.description = %q{This library is used to parse a Rightmove format zip file}
   s.email = %q{robotmay@gmail.com}
   s.extra_rdoc_files = [

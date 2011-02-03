@@ -26,7 +26,7 @@ module Rightmove
 	
 		private
 		def read
-			blm = self.zip_file.entries.select! {|v| v.to_s =~ /\.blm/i }.first
+			blm = self.zip_file.entries.select {|v| v.to_s =~ /\.blm/i }.first
 			@document = BLM::Document.new( self.zip_file.read(blm) )
 		end
 		
