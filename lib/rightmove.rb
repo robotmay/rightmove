@@ -63,5 +63,9 @@ module BLM
 				end
 			end
 		end
+		
+		def media_fields
+			self.attributes.select {|k,v| k.to_s =~ /media_(image|floor_plan)_.*/i }
+		end
 	end
 end
