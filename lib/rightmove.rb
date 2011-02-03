@@ -33,7 +33,7 @@ module Rightmove
 		def parse_file_name
 			branch_id, timestamp = @zip_file.to_s.split("_").pop(2)
 			@branch_id = branch_id.to_i
-			@timestamp = Time.new(timestamp)
+			@timestamp = Time.parse(timestamp)
 		end
 	end
 end
