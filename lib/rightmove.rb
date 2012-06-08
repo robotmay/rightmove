@@ -38,7 +38,8 @@ module Rightmove
 
     def time_from_string(string)
       nums = string.split("").map(&:to_i)
-      Time.new(nums.shift(4), nums.shift(2), nums.shift(2), nums.shift(2), nums.shift(2), nums.shift(2))
+      take = lamba { |nums, i| nums.shift(i).join.to_i }
+      Time.new(take.call(nums, 4), take.call(nums, 2), take.call(nums, 2),  take.call(nums, 2), take.call(nums, 2), take.call(nums, 2))
     end
 
 	end
